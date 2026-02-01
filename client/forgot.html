@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Torn | Forgot Password</title>
+    <meta name="description" content="Complete and upgrade your warship in the ongoing space war!">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="/assets/css/pages/form.css" crossorigin="anonymous">
+
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <main class="container text-light">
+        <h1 class="text-center my-5">Forgot Password</h1>
+        <form onsubmit="return forgotPass()" class="w-50 m-auto p-3 rounded">
+            <div class="form-group mb-3">
+                <label for="reset-email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="reset-email" required>
+                <span class="form-text text-light">The email linked to your Torn account.</span>
+            </div>
+            <div class="mb-3" class="form-group">
+                <label for="reset-username" class="form-label">Username</label>
+                <input type="text" class="form-control" id="reset-username" required>
+                <span class="form-text text-light">The username of the Torn account that you are attempting to reset.</span>
+            </div>
+            <input type="submit" value="Send Request" class="btn btn-primary">
+        </form>
+    </main>
+
+    <script>
+        const forgotPass = () => {
+            const email = document.querySelector(`#reset-email`)?.value;
+            const username = document.querySelector(`#reset-username`)?.value;
+
+            const request = new XMLHttpRequest();
+
+            request.open(`POST`, `/api/forgot`, true);
+
+            request.onreadystatechange = () => {
+                if (this.readyState === 4) {
+                    if (this.status === 200) {
+                        alert(`Password reset initiated. Please check your email for further instructions`);
+                        window.location.replace(`https://torn.space`);
+                        return false;
+                    } else {
+                        alert(`Failed to intiiate a password reset. HTTP ERROR ${this.status}`);
+                        return false;
+                    }
+                }
+            };
+
+            request.send(`${username}%${password}`);
+            return false;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+{
+    "env": {
+        "browser": true,
+        "es2021": true,
+        "node": true
+    },
+    "extends": [
+        "plugin:react/recommended",
+        "eslint:recommended",
+        "standard"
+    ],
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": 12,
+        "sourceType": "module"
+    },
+    "plugins": [
+        "react",
+        "@typescript-eslint"
+    ],
+    "settings": {
+        "react": {
+            "version": "detect"
+        }
+    },
+    "rules": {
+        "no-eval": 2,
+        "brace-style": 1,
+        "indent": ["warn", 4, { "SwitchCase": 1 }],
+        "semi": [2, "always"],
+        "quotes": [2, "backtick"],
+        "prefer-template": 1,
+        "curly": 0,
+        "prefer-regex-literals":0,
+
+        // ESLint globals have not been configured for these.
+        "no-undef": 0,
+        "no-use-before-define": 0,
+        "no-unused-vars": 0,
+        "no-unused-expressions": 0,
+        "prefer-const": 0,
+
+        // More redundant manual linting.
+        "eqeqeq": 0,
+        "camelcase": 0,
+
+        // Too lazy to fix.
+        "no-useless-escape": 0,
+        "no-func-assign": 0,
+        "no-global-assign": 0,
+        "no-self-assign": 0,
+        "func-style": 0
+    }
+}
