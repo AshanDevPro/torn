@@ -142,4 +142,4 @@ db/
 # Discord application token
 config/discordconfig.json
 
-client/index.html
+
