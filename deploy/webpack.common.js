@@ -70,9 +70,10 @@ module.exports = {
 
     plugins: [
         new Webpack.ProvidePlugin({
-            global: 'window',
+            // global: 'window', // REMOVED: This causes webpack to try and resolve 'window' as a module
         }),
         new Webpack.DefinePlugin({
+            global: 'window', // ADDED: Replaces 'global' with 'window' identifier
             VERSION: JSON.stringify(`3.0.0`),
             COMMITHASH: JSON.stringify(`unknown`),
             BRANCH: JSON.stringify(`unknown`)
