@@ -1,4 +1,3 @@
-# Deploying Torn.Space to Hostinger VPS (Clean Install)
 # Deploying Torn.Space to Hostinger VPS (Full Guide)
 
 This guide walks you through hosting your game on a Hostinger VPS using Ubuntu 22. It covers the entire process: setting up the server, deploying the code, configuring the network, and maintaining the game.
