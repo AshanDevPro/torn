@@ -69,6 +69,9 @@ module.exports = {
     },
 
     plugins: [
+        new Webpack.ProvidePlugin({
+            global: 'window',
+        }),
         new Webpack.DefinePlugin({
             VERSION: JSON.stringify(`3.0.0`),
             COMMITHASH: JSON.stringify(`unknown`),

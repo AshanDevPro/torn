@@ -11,7 +11,7 @@
     "dev:lint": "eslint . --fix --ext .ts,.tsx,.js,.jsx && stylelint \"**/*.css\" --fix",
     "ci:lint": "eslint . --ext .ts,.tsx,.js,.jsx && stylelint \"**/*.css\"",
     "dev:serve": "webpack serve --config ./deploy/webpack.dev.js",
-    "build:vps": "webpack --progress --config ./deploy/webpack.vps.js",
+    "build:vps": "webpack --progress --config ./deploy/webpack.vps.js && sh ./tools/index_cache_bust.sh",
     "lint-staged": "lint-staged"
   },
   "repository": {

@@ -19,23 +19,6 @@
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
 
     <link rel="stylesheet" href="/assets/css/pages/home.css">
-
-    <!-- Google Analytics -->
-    <script src="https://www.googletagmanager.com/gtag/js?id=UA-81486045-1"></script>
-    <script>
-        document.addEventListener('contextmenu', event => event.preventDefault());
-        window.dataLayer = window.dataLayer || [];
-
-        function gtag () {
-            dataLayer.push(arguments);
-        }
-
-        gtag('js', new Date());
-        gtag('config', 'UA-81486045-1');
-    </script>
-
-    <!-- AdSense -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" data-ad-client="ca-pub-7362501745456542"></script>
 </head>
 <body>
     <div id="root"></div>
