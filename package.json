@@ -69,7 +69,7 @@
     "webpack": "^5.69.1",
     "webpack-cli": "^4.9.2",
     "webpack-dev-server": "^4.7.4",
-    "webpack-merge": "^5.8.0"
+    "webpack-merge": "^6.0.1"
   },
   "dependencies": {
     "bad-words": "^3.0.4",
