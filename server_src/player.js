@@ -27,7 +27,7 @@ const Asteroid = require(`./universe/asteroid.js`);
 let nextPlayerId = 0;
 
 class Player {
-    constructor () {
+    constructor() {
         this.name = ``;
         this.type = `Player`;
 
@@ -43,6 +43,10 @@ class Player {
         this.guest = false;
         this.dead = false;
         this.docked = false;
+
+        // Developer Mode
+        this.isDeveloper = false;
+        this.godMode = false;
 
         // misc timers
         this.noDrift = 50; // A timer used for decelerating angular momentum
@@ -148,7 +152,7 @@ class Player {
         this.equipped = 0;
     }
 
-    tick () {
+    tick() {
         // timer business
         if (this.killStreakTimer-- < 0) this.killStreak = 0; // Sensitive to off-by-ones.
         if (this.borderJumpTimer > 0) this.borderJumpTimer--;
@@ -179,7 +183,7 @@ class Player {
         else if (this.charge > 0 && !this.space && !this.c) this.charge = 0;
     }
 
-    fire () {
+    fire() {
         if (this.empTimer > 0) return; // Cannot shoot while EMP'd.
 
         if (this.c && this.charge > 0) this.shootEliteWeapon();
@@ -387,7 +391,7 @@ class Player {
         }
     }
 
-    shootEliteWeapon () {
+    shootEliteWeapon() {
         if (this.rank < this.ship) return;
         if (this.ship === 16 || (this.ship == 25 && this.equipped === 0)) { // Elite Raider turbo
             // This effectively just shoots turbo.
@@ -431,7 +435,7 @@ class Player {
         this.reload(true, 0);
     }
 
-    reload (elite, wepId) {
+    reload(elite, wepId) {
         if (elite) {
             if (this.ship == 20) this.charge = -wepns[41].charge * 0.95;
             if (this.ship == 18) this.charge = -wepns[39].charge * 0.95;
@@ -443,7 +447,7 @@ class Player {
         else this.charge = -wepns[wepId].charge;
     }
 
-    canShoot (wepId) {
+    canShoot(wepId) {
         if (typeof wepns[wepId] === `undefined`) return false;
         if ((this.disguise > 0 && wepId != 18 && wepId != 19 && wepId != 21 && wepId != 22 && wepId != 29 && wepId != 36) || (this.shield && wepns[wepId].type !== `Misc`)) return false;
         //  Upcoming balance feature, do not touch
@@ -455,7 +459,7 @@ class Player {
         return this.space && sufficientCharge;
     }
 
-    move () {
+    move() {
         if (this.hyperdriveTimer > 0 && this.empTimer <= 0) {
             this.hyperdriveTimer--;
             this.speed = (wepns[22].speed - square(100 - this.hyperdriveTimer)) / (this.ship == 16 ? 7 : 10);
@@ -537,7 +541,7 @@ class Player {
         this.checkMineCollision();
     }
 
-    checkMineCollision () {
+    checkMineCollision() {
         for (const i in mines[this.sy][this.sx]) {
             const m = mines[this.sy][this.sx][i];
             if (m.color != this.color && m.wepnID != 32 && m.wepnID != 44) { // enemy mine and not either impulse or campfire
@@ -557,7 +561,7 @@ class Player {
         }
     }
 
-    testSectorChange () {
+    testSectorChange() {
         let giveBounce = false; // did they bounce on a galaxy edge?
         let new_sx = this.sx;
         let new_sy = this.sy;
@@ -625,17 +629,17 @@ class Player {
         }
     }
 
-    juke (left) {
+    juke(left) {
         if (this.charge < 0) return;
         this.charge = -10;
         this.jukeTimer = (this.trail % 16 == 4 ? 1.25 : 1) * (left ? 50 : -50); // misc trail makes you juke further.
     }
 
-    mute (minutes) {
+    mute(minutes) {
         chatAll(`${this.nameWithColor()} has been ${minutes > 0 ? `muted for ${minutes} minutes!` : `unmuted!`}`);
     }
 
-    changeSectors (new_sy, new_sx) {
+    changeSectors(new_sy, new_sx) {
         this.docked = this.dead = false;
         delete dockers[this.id];
         delete deads[this.id];
@@ -684,7 +688,7 @@ class Player {
         if (checkStr !== `2`) this.planetsClaimed = `${prevStr}1${postStr}`;
     }
 
-    updateRank () {
+    updateRank() {
         const prerank = this.rank;
         this.rank = 0;
         while (this.experience > ranks[this.rank]) this.rank++; // increment until we're in the right rank's range
@@ -695,7 +699,7 @@ class Player {
         }
     }
 
-    checkPlanetCollision () {
+    checkPlanetCollision() {
         const p = planets[this.sy][this.sx];
 
         // if out of range, return. Only try this once every fifth of second.
@@ -752,9 +756,9 @@ class Player {
         this.checkRandomAchievements(true, false, false);
     }
 
-    checkQuestStatus (touchingPlanet) {}
+    checkQuestStatus(touchingPlanet) { }
 
-    shootBullet (currWep) {
+    shootBullet(currWep) {
         if (this.bulletQueue > 0) { // Submachinegun
             if (this.ammos[this.equipped] <= 0) return;
             this.bulletQueue--;
@@ -784,7 +788,7 @@ class Player {
         }
     }
 
-    shootMissileSpecific (aWeapon) {
+    shootMissileSpecific(aWeapon) {
         const r = Math.random();
         const bAngle = this.angle;
         const missile = new Missile(this, r, aWeapon, bAngle);
@@ -792,25 +796,25 @@ class Player {
         sendAllSector(`sound`, { file: `missile`, x: this.x, y: this.y }, this.sx, this.sy);
     }
 
-    shootMissile () {
+    shootMissile() {
         this.shootMissile2(this.weapons[this.equipped]);
     }
 
-    shootOrb () {
+    shootOrb() {
         const r = Math.random();
         const orb = new Orb(this, r, this.weapons[this.equipped]);
         orbs[this.sy][this.sx][r] = orb;
         sendAllSector(`sound`, { file: `beam`, x: this.x, y: this.y }, this.sx, this.sy);
     }
 
-    shootMineSpecific (aWeapon) {
+    shootMineSpecific(aWeapon) {
         const r = Math.random();
         const mine = new Mine(this, r, aWeapon);
         mines[this.sy][this.sx][r] = mine;
         sendAllSector(`mine`, { x: this.x, y: this.y }, this.sx, this.sy);
     }
 
-    shootMine () {
+    shootMine() {
         if (Object.keys(mines[this.sy][this.sx]).length >= 20 && (this.weapons[this.equipped] < 30 || this.weapons[this.equipped] == 48 || this.weapons[this.equipped] == 43)) {
             this.ammos[this.equipped]++;
             this.emit(`chat`, { msg: chatColor(`red`) + chatTranslate(`This sector has reached its limit of 20 mines.`) });
@@ -824,7 +828,7 @@ class Player {
         this.shootMineSpecific(this.weapons[this.equipped]);
     }
 
-    shootLeechBeam () {
+    shootLeechBeam() {
         const ox = this.x; const oy = this.y; // Current emitter coordinates
         let nearBEnemy = 0; // enemy turret target, which we will compute
         let nearBFriendly = 0; // friendly turret target, which we will compute
@@ -931,7 +935,7 @@ class Player {
         sendAllSector(`sound`, { file: `beam`, x: ox, y: oy }, this.sx, this.sy);
     }
 
-    shootBeam (origin, restricted) { // restricted is for recursive calls from quarriers
+    shootBeam(origin, restricted) { // restricted is for recursive calls from quarriers
         const ox = origin.x; const oy = origin.y;
         let nearP = 0; // target, which we will compute
         const range2 = square(wepns[this.weapons[this.equipped]].range * 10);
@@ -988,18 +992,24 @@ class Player {
         sendAllSector(`sound`, { file: `beam`, x: ox, y: oy }, this.sx, this.sy);
     }
 
-    shootBlast (currWep) {
+    shootBlast(currWep) {
         const r = Math.random();
         const blast = new Blast(this, r, currWep);
         blasts[this.sy][this.sx][r] = blast;
         sendAllSector(`sound`, { file: `beam`, x: this.x, y: this.y }, this.sx, this.sy);
     }
 
-    async die (b) {
+    async die(b) {
     }
 
-    dmg (d, origin) {
+    dmg(d, origin) {
         if (!players[this.sy][this.sx][this.id]) return; // multi-kill bug
+
+        // God Mode - Developer Mode Protection
+        if (this.godMode) {
+            note(`GOD MODE`, this.x, this.y - 64, this.sx, this.sy);
+            return false;
+        }
 
         // reward nn bots for hurting other players
         if (this.isNNBot && origin.type === `Bullet` && origin.owner.type === `Player` && origin.owner.net != 0) {
@@ -1035,7 +1045,7 @@ class Player {
         return this.health < 0;
     }
 
-    EMP (t) {
+    EMP(t) {
         if (this.ship >= 16 && this.ship <= 20) t *= 1.25; // EMP works better on elite ships.
         if (this.ship === 21 && this.health * 1.05 < this.maxHealth) this.health *= 1.05; // r21's get a tiny healing benefit.
 
@@ -1045,11 +1055,11 @@ class Player {
         this.emit(`emp`, { t });
     }
 
-    save () {}
+    save() { }
 
-    onKill (p) {
-    // kill streaks
-    // Don't award for guest kills
+    onKill(p) {
+        // kill streaks
+        // Don't award for guest kills
         if (!p.guest && p.color !== this.color) {
             this.killStreak++;
             this.killStreakTimer = 750;// 30s
@@ -1074,25 +1084,25 @@ class Player {
     }
 
     // Player_MP stubs
-    onMined (a) {}
-    checkKillAchievements (note, trailKill, friendKill) {}
-    checkMoneyAchievements (note) {}
-    checkDriftAchievements (note, lucky) {}
-    checkRandomAchievements (note, boing, thief) {}
-    sendStatus () {}
-    baseKilled () {}
-    getAllPlanets () {}
+    onMined(a) { }
+    checkKillAchievements(note, trailKill, friendKill) { }
+    checkMoneyAchievements(note) { }
+    checkDriftAchievements(note, lucky) { }
+    checkRandomAchievements(note, boing, thief) { }
+    sendStatus() { }
+    baseKilled() { }
+    getAllPlanets() { }
 
-    updatePolars () { // Convert my rectangular motion/position data to polar
+    updatePolars() { // Convert my rectangular motion/position data to polar
         this.driftAngle = Math.atan2(this.vy, this.vx);
         this.speed = Math.sqrt(square(this.vy) + square(this.vx));
     }
 
-    refillAmmo (i) {
+    refillAmmo(i) {
         if (typeof wepns[this.weapons[i]] !== `undefined`) this.ammos[i] = wepns[this.weapons[i]].ammo;
     }
 
-    refillAllAmmo () {
+    refillAllAmmo() {
         let ammoHasChanged = false;
         for (let i = 0; i < 10; i++) {
             const beforeAmmo = this.ammos[i];
@@ -1104,11 +1114,11 @@ class Player {
         this.strongLocal(`Ammo Replenished!`, this.x, this.y + 256);
     }
 
-    testAfk () {
+    testAfk() {
         return false;
     }
 
-    navigationalShieldCount () { // Checks if the player has a navigational shield. This item does not stack positive effects, but is left like this in case we want to
+    navigationalShieldCount() { // Checks if the player has a navigational shield. This item does not stack positive effects, but is left like this in case we want to
         let navShield = 0;
         if (this.ship >= wepns[49].level) { // gotta have sufficiently high ship
             let maxSlots = 10;
@@ -1118,17 +1128,17 @@ class Player {
         this.navigationalShield = navShield;
     }
 
-    spoils (type, amt) { /* gives you something. Called wenever you earn money / exp / w/e */ }
+    spoils(type, amt) { /* gives you something. Called wenever you earn money / exp / w/e */ }
 
-    nameWithColor () { // returns something like "~`green~`[O] 2swap~`yellow~`"
+    nameWithColor() { // returns something like "~`green~`[O] 2swap~`yellow~`"
         return `${chatColor(this.color)}${this.name}${chatColor(`yellow`)}`;
     }
 
-    noteLocal (msg, x, y) {}
-    strongLocal (msg, x, y) {}
+    noteLocal(msg, x, y) { }
+    strongLocal(msg, x, y) { }
 
-    botPlay () {}
-    emit (a, b) {}
+    botPlay() { }
+    emit(a, b) { }
 }
 
 module.exports = Player;

@@ -16,7 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 class Command {
-    constructor (usage, permissions, invoke, visible = true) {
+    constructor(usage, permissions, invoke, visible = true) {
         this.usage = usage;
         this.permissions = permissions;
         this.invoke = invoke;
@@ -478,6 +478,227 @@ cmds.kick = new Command(`/kick <player> - Kicks the specified player`, ADMINPLUS
 });
 
 cmds.saveturrets = new Command(`/saveTurrets - Runs a manual save on the server turrets`, ADMINPLUS, saveTurrets);
+
+// DEVELOPER MODE COMMANDS
+// These commands provide comprehensive testing capabilities and bypass normal game progression
+cmds.devmode = new Command(`/devmode \u003cplayer\u003e - Toggle developer mode for a player (grants all items, max stats, unlimited resources)`, ADMINPLUS, (commandExecuter, msg) => {
+    const split = msg.split(` `);
+    if (split.length != 2) {
+        commandExecuter.socket.emit(`chat`, { msg: `Bad syntax! Use: /devmode playername` });
+        return;
+    }
+
+    const name = split[1];
+    const recipient = getPlayerFromName(name);
+    if (recipient == -1) {
+        commandExecuter.socket.emit(`chat`, { msg: `Player '${name}' not found.` });
+        return;
+    }
+
+    recipient.isDeveloper = !recipient.isDeveloper;
+
+    if (recipient.isDeveloper) {
+        // Grant all developer perks
+        recipient.money = Number.MAX_SAFE_INTEGER / 2; // Half of max to avoid overflow issues
+        recipient.experience = Number.MAX_SAFE_INTEGER / 2;
+        recipient.rank = 25;
+        recipient.ship = 25;
+        recipient.lives = 999;
+
+        // Max out all stats
+        recipient.thrust2 = 10;
+        recipient.radar2 = 10;
+        recipient.agility2 = 10;
+        recipient.capacity2 = 10;
+        recipient.maxHealth2 = 10;
+        recipient.energy2 = 10;
+
+        // Unlock all weapon slots and give infinite ammo
+        for (let i = 0; i < 10; i++) {
+            recipient.weapons[i] = -1; // Empty slot, can be filled
+            recipient.ammos[i] = 999999;
+        }
+
+        // Max resources
+        recipient.iron = 999999;
+        recipient.silver = 999999;
+        recipient.platinum = 999999;
+        recipient.copper = 999999;
+
+        // Enable god mode by default
+        recipient.godMode = true;
+
+        recipient.save();
+        recipient.emit(`chat`, {
+            msg: `${chatColor(`lime`)}[DEVELOPER MODE] ENABLED! You now have:
+• Unlimited money and resources
+• Max rank (25) and stats
+• 999 lives
+• God mode (invincibility)
+• All weapon slots unlocked
+Use /godmode to toggle invincibility
+Use /unlockall to unlock all weapons` });
+        chatAll(`${chatColor(`violet`)}${recipient.nameWithColor()} ${chatColor(`lime`)}is now in DEVELOPER MODE!`);
+    } else {
+        recipient.godMode = false;
+        recipient.emit(`chat`, { msg: `${chatColor(`red`)}[DEVELOPER MODE] DISABLED!` });
+        chatAll(`${chatColor(`violet`)}${recipient.nameWithColor()} ${chatColor(`red`)}developer mode disabled.`);
+    }
+
+    recipient.save();
+    commandExecuter.socket.emit(`chat`, { msg: `${chatColor(`violet`)}Developer mode ${recipient.isDeveloper ? 'ENABLED' : 'DISABLED'} for ${recipient.nameWithColor()}` });
+});
+
+cmds.godmode = new Command(`/godmode - Toggle invincibility (god mode)`, ADMINPLUS, (commandExecuter, msg) => {
+    commandExecuter.godMode = !commandExecuter.godMode;
+    commandExecuter.socket.emit(`chat`, { msg: `${chatColor(commandExecuter.godMode ? `lime` : `red`)}God Mode: ${commandExecuter.godMode ? 'ON' : 'OFF'}` });
+    if (commandExecuter.godMode) {
+        commandExecuter.health = commandExecuter.maxHealth;
+    }
+});
+
+cmds.unlockall = new Command(`/unlockall - Unlock all weapons and items`, ADMINPLUS, (commandExecuter, msg) => {
+    // Give access to all weapons by unlocking all slots
+    for (let i = 0; i < 10; i++) {
+        if (commandExecuter.weapons[i] === -2) {
+            commandExecuter.weapons[i] = -1; // Unlock the slot
+        }
+        commandExecuter.ammos[i] = 999999; // Infinite ammo
+    }
+
+    // Give one of each weapon type in slots
+    const bestWeapons = [39, 8, 13, 17, 36, 29, 22, 21, 19, 18]; // Selection of powerful weapons
+    for (let i = 0; i < Math.min(bestWeapons.length, 10); i++) {
+        commandExecuter.weapons[i] = bestWeapons[i];
+        commandExecuter.ammos[i] = 999999;
+    }
+
+    commandExecuter.save();
+    sendWeapons(commandExecuter);
+    commandExecuter.socket.emit(`chat`, { msg: `${chatColor(`lime`)}All weapons unlocked! All weapon slots filled with powerful weapons and infinite ammo!` });
+});
+
+cmds.maxstats = new Command(`/maxstats - Max out all player stats`, ADMINPLUS, (commandExecuter, msg) => {
+    commandExecuter.thrust2 = 10;
+    commandExecuter.radar2 = 10;
+    commandExecuter.agility2 = 10;
+    commandExecuter.capacity2 = 10;
+    commandExecuter.maxHealth2 = 10;
+    commandExecuter.energy2 = 10;
+
+    commandExecuter.save();
+    commandExecuter.socket.emit(`chat`, { msg: `${chatColor(`lime`)}All stats maxed out to level 10!` });
+});
+
+cmds.setmoney = new Command(`/setmoney \u003camount\u003e - Set your money to a specific amount`, ADMINPLUS, (commandExecuter, msg) => {
+    const split = msg.split(` `);
+    if (split.length != 2) {
+        commandExecuter.socket.emit(`chat`, { msg: `Bad syntax! Use: /setmoney 1000000` });
+        return;
+    }
+
+    const amount = parseInt(split[1]);
+    if (isNaN(amount) || amount < 0) {
+        commandExecuter.socket.emit(`chat`, { msg: `${chatColor(`red`)}Invalid amount!` });
+        return;
+    }
+
+    commandExecuter.money = amount;
+    commandExecuter.save();
+    commandExecuter.socket.emit(`chat`, { msg: `${chatColor(`lime`)}Money set to $${amount}!` });
+});
+
+cmds.setexp = new Command(`/setexp \u003camount\u003e - Set your experience to a specific amount`, ADMINPLUS, (commandExecuter, msg) => {
+    const split = msg.split(` `);
+    if (split.length != 2) {
+        commandExecuter.socket.emit(`chat`, { msg: `Bad syntax! Use: /setexp 1000000` });
+        return;
+    }
+
+    const amount = parseInt(split[1]);
+    if (isNaN(amount) || amount < 0) {
+        commandExecuter.socket.emit(`chat`, { msg: `${chatColor(`red`)}Invalid amount!` });
+        return;
+    }
+
+    commandExecuter.experience = amount;
+    commandExecuter.updateRank();
+    commandExecuter.save();
+    commandExecuter.socket.emit(`chat`, { msg: `${chatColor(`lime`)}Experience set to ${amount}!` });
+});
+
+cmds.setrank = new Command(`/setrank \u003crank\u003e - Set your rank/ship level (0-25)`, ADMINPLUS, (commandExecuter, msg) => {
+    const split = msg.split(` `);
+    if (split.length != 2) {
+        commandExecuter.socket.emit(`chat`, { msg: `Bad syntax! Use: /setrank 25` });
+        return;
+    }
+
+    const rank = parseInt(split[1]);
+    if (isNaN(rank) || rank < 0 || rank > 25) {
+        commandExecuter.socket.emit(`chat`, { msg: `${chatColor(`red`)}Rank must be between 0 and 25!` });
+        return;
+    }
+
+    commandExecuter.rank = rank;
+    commandExecuter.ship = rank;
+    commandExecuter.save();
+    commandExecuter.socket.emit(`chat`, { msg: `${chatColor(`lime`)}Rank and ship set to ${rank}!` });
+});
+
+cmds.refill = new Command(`/refill - Refill all ammo and health`, ADMINPLUS, (commandExecuter, msg) => {
+    commandExecuter.refillAllAmmo();
+    commandExecuter.health = commandExecuter.maxHealth;
+    commandExecuter.iron = 999999;
+    commandExecuter.silver = 999999;
+    commandExecuter.platinum = 999999;
+    commandExecuter.copper = 999999;
+    commandExecuter.socket.emit(`chat`, { msg: `${chatColor(`lime`)}Refilled: ammo, health, and resources!` });
+});
+
+cmds.giveweapon = new Command(`/giveweapon \u003cplayer\u003e \u003cweaponID\u003e - Give a specific weapon to a player`, ADMINPLUS, (commandExecuter, msg) => {
+    const split = msg.split(` `);
+    if (split.length != 3) {
+        commandExecuter.socket.emit(`chat`, { msg: `Bad syntax! Use: /giveweapon playername 13` });
+        return;
+    }
+
+    const name = split[1];
+    const weaponId = parseInt(split[2]);
+
+    const recipient = getPlayerFromName(name);
+    if (recipient == -1) {
+        commandExecuter.socket.emit(`chat`, { msg: `Player '${name}' not found.` });
+        return;
+    }
+
+    if (isNaN(weaponId)) {
+        commandExecuter.socket.emit(`chat`, { msg: `${chatColor(`red`)}Invalid weapon ID!` });
+        return;
+    }
+
+    // Find first empty slot
+    let slotFound = false;
+    for (let i = 0; i < 10; i++) {
+        if (recipient.weapons[i] === -1 || recipient.weapons[i] === -2) {
+            recipient.weapons[i] = weaponId;
+            recipient.ammos[i] = 999999;
+            slotFound = true;
+            break;
+        }
+    }
+
+    if (!slotFound) {
+        // Override first slot if no empty slots
+        recipient.weapons[0] = weaponId;
+        recipient.ammos[0] = 999999;
+    }
+
+    recipient.save();
+    sendWeapons(recipient);
+    commandExecuter.socket.emit(`chat`, { msg: `${chatColor(`lime`)}Gave weapon ${weaponId} to ${recipient.nameWithColor()}!` });
+    recipient.socket.emit(`chat`, { msg: `${chatColor(`lime`)}You received weapon ${weaponId}!` });
+});
 
 if (Config.getValue(`debug`, false)) {
     cmds.eval = new Command(`/eval .... - Evaluates arbitrary JS on the server`, ADMINPLUS, (commandExecuter, msg) => {

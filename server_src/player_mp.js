@@ -19,7 +19,7 @@ const Player = require(`./player.js`);
 const Package = require(`./universe/package.js`);
 
 class PlayerMP extends Player {
-    constructor (socket) {
+    constructor(socket) {
         super();
 
         this.elo = 1200;
@@ -41,18 +41,18 @@ class PlayerMP extends Player {
         this.afkTimer = afkTimerConst; // used to check AFK status
     }
 
-    tick () {
+    tick() {
         if (this.guild in guildPlayers) guildPlayers[this.guild][this.id] = { sx: this.sx, sy: this.sy, x: this.x, y: this.y };
         super.tick();
     }
 
-    kick (msg) {
+    kick(msg) {
         this.kickMsg = msg;
         this.emit(`kick`, { msg });
         this.socket.disconnect();
     }
 
-    swap (msg) { // msg looks like "/swap 2 5". Swaps two weapons.
+    swap(msg) { // msg looks like "/swap 2 5". Swaps two weapons.
         if (!this.docked) {
             this.emit(`chat`, { msg: `${chatColor(`red`)}You must be docked to use that command!` });
             return;
@@ -91,12 +91,12 @@ class PlayerMP extends Player {
         this.emit(`chat`, { msg: `${chatColor(`lime`)}Weapons swapped!` });
     }
 
-    r (msg) { // pm reply
+    r(msg) { // pm reply
         if (this.reply.includes(` `)) this.reply = this.reply.split(` `)[1];
         this.pm(`/pm ${this.reply} ${msg.substring(3)}`);
     }
 
-    pm (msg) { // msg looks like "/pm luunch hey there pal". If a moderator, you use "2swap" not "[O] 2swap".
+    pm(msg) { // msg looks like "/pm luunch hey there pal". If a moderator, you use "2swap" not "[O] 2swap".
         if (msg.split(` `).length < 3) { // gotta have pm, name, then message
             this.emit(`chat`, { msg: `Invalid Syntax!` });
             return;
@@ -127,7 +127,7 @@ class PlayerMP extends Player {
         this.emit(`chat`, { msg: `${chatColor(`red`)}Player not found!` });
     }
 
-    changePass (pass) { // /password
+    changePass(pass) { // /password
         if (!this.docked) {
             this.emit(`chat`, { msg: `${chatColor(`red`)}This command is only available when docked at a base.` });
             return;
@@ -146,7 +146,7 @@ class PlayerMP extends Player {
         this.emit(`chat`, { msg: `${chatColor(`lime`)}Type "/confirm your_new_password" to complete the change.` });
     }
 
-    async confirmPass (pass) { // /confirm
+    async confirmPass(pass) { // /confirm
         if (!this.docked) {
             this.emit(`chat`, { msg: `${chatColor(`red`)}This command is only available when docked at a base.` });
             return;
@@ -167,7 +167,7 @@ class PlayerMP extends Player {
         this.emit(`chat`, { msg: `${chatColor(`lime`)}Password changed successfully.` });
     }
 
-    testAfk () {
+    testAfk() {
         if (this.afkTimer-- < 0) {
             this.emit(`AFK`);
             this.kick(`AFK!`);
@@ -177,11 +177,18 @@ class PlayerMP extends Player {
         return false;
     }
 
-    emit (a, b) {
+    emit(a, b) {
         this.socket.emit(a, b);
     }
 
-    async die (b) { // b: bullet object or other object which killed us
+    async die(b) { // b: bullet object or other object which killed us
+        // God Mode - Developer Mode Protection
+        if (this.godMode) {
+            this.health = this.maxHealth;
+            this.emit(`chat`, { msg: `${chatColor(`lime`)}[GOD MODE] Death prevented!` });
+            return;
+        }
+
         // Prevent multiple deaths in a single event
         // The second case shouldn't be necessary but this bug is hard to reproduce so it is there as a sanity check
         if (this.dead || players[this.sy][this.sx][this.id] === undefined) {
@@ -284,13 +291,13 @@ class PlayerMP extends Player {
         sendWeapons(this);
     }
 
-    save () {
+    save() {
         if (this.guest) return;
         savePlayerData(this);
     }
 
-    sellOre (oretype) {
-    // pay them appropriately
+    sellOre(oretype) {
+        // pay them appropriately
         if (oretype == `iron` || oretype == `all`) {
             this.spoils(`money`, this.iron);
             this.iron = 0;
@@ -307,7 +314,7 @@ class PlayerMP extends Player {
         this.save();
     }
 
-    dock () {
+    dock() {
         if (typeof this.aluminium === `undefined`) this.aluminium = 0;
         if (typeof this.copper === `undefined`) this.copper = 0;
         this.copper += this.aluminium;
@@ -339,7 +346,7 @@ class PlayerMP extends Player {
         this.sendStatus();
     }
 
-    spoils (type, amt) { // gives you something. Called wenever you earn money / exp / w/e
+    spoils(type, amt) { // gives you something. Called wenever you earn money / exp / w/e
         if (typeof amt === `undefined`) return;
         if (type === `experience`) {
             this.experience += amt;
@@ -352,19 +359,19 @@ class PlayerMP extends Player {
         this.emit(`spoils`, { type, amt });
     }
 
-    onMined (a) {
-    // bitmask of what types of ores this player has mined
+    onMined(a) {
+        // bitmask of what types of ores this player has mined
         if ((this.oresMined & (1 << a)) == 0) this.oresMined += 1 << a;
 
         // achievementy stuff
         this.checkMoneyAchievements(true);
     }
 
-    sendStatus () {
+    sendStatus() {
         this.emit(`status`, { docked: this.docked, state: this.dead, lives: this.lives });
     }
 
-    checkKillAchievements (note, trailKill, friendKill) {
+    checkKillAchievements(note, trailKill, friendKill) {
         this.killAchievements[0] = this.kills >= 1;
         this.killAchievements[1] = this.kills >= 10;
         this.killAchievements[2] = this.kills >= 100;
@@ -382,7 +389,7 @@ class PlayerMP extends Player {
         this.emit(`achievementsKill`, { note, achs: this.killAchievements });
     }
 
-    checkMoneyAchievements (note) {
+    checkMoneyAchievements(note) {
         this.moneyAchievements[0] = this.oresMined == 15;
         this.moneyAchievements[1] = this.money >= 100000;
         this.moneyAchievements[2] = this.money >= 1000000;
@@ -395,7 +402,7 @@ class PlayerMP extends Player {
         this.emit(`achievementsCash`, { note, achs: this.moneyAchievements });
     }
 
-    checkDriftAchievements (note, lucky) {
+    checkDriftAchievements(note, lucky) {
         this.driftAchievements[0] = this.agility2 >= 2.5; // lvl 12 = 12*.25+1 = 2.5
         this.driftAchievements[1] |= lucky;
         this.driftAchievements[2] = this.elo > 2200;
@@ -408,7 +415,7 @@ class PlayerMP extends Player {
         this.emit(`achievementsDrift`, { note, achs: this.driftAchievements });
     }
 
-    checkRandomAchievements (note, boing, thief) {
+    checkRandomAchievements(note, boing, thief) {
         this.randomAchievements[0] |= boing;
         this.randomAchievements[1] |= thief;
         this.randomAchievements[2] = !this.planetsClaimed.includes(`0`);
@@ -421,15 +428,15 @@ class PlayerMP extends Player {
         this.emit(`achievementsMisc`, { note, achs: this.randomAchievements });
     }
 
-    noteLocal (msg, x, y) {
+    noteLocal(msg, x, y) {
         this.emit(`note`, { msg, x, y, local: true });
     }
 
-    strongLocal (msg, x, y) {
+    strongLocal(msg, x, y) {
         this.emit(`strong`, { msg, x, y, local: true });
     }
 
-    baseKilled () {
+    baseKilled() {
         this.baseKills++;
 
         // base quest checking
@@ -449,7 +456,7 @@ class PlayerMP extends Player {
         this.checkKillAchievements(true, false, false);
     }
 
-    checkQuestStatus (touchingPlanet) {
+    checkQuestStatus(touchingPlanet) {
         if (this.quest == 0) return;// no point if the person hasn't got a quest rn.
 
         if (this.quest.type === `Mining` && this.sx == this.quest.sx && this.sy == this.quest.sy) {
@@ -495,14 +502,14 @@ class PlayerMP extends Player {
         this.checkKillAchievements(true, false, false);
     }
 
-    getAllPlanets () {
+    getAllPlanets() {
         let packHere = 0;
         const planet = planets[this.sy][this.sx];
         packHere = { id: planet.id, name: planet.name, x: planet.x, y: planet.y, color: planet.color };
         this.emit(`planets`, { pack: packHere });
     }
 
-    onKill (p) {
+    onKill(p) {
         super.onKill(p);
 
         // achievementy stuff

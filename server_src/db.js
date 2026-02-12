@@ -76,6 +76,11 @@ global.loadPlayerData = async function (player) {
         player[key] = record[key];
     }
 
+    // Ensure isDeveloper field exists (default to false)
+    if (typeof player.isDeveloper === `undefined`) {
+        player.isDeveloper = false;
+    }
+
     if (player.sx >= mapSz || player.sy >= mapSz || bases[player.sy][player.sx] === 0 || bases[player.sy][player.sx].color != player.color) {
         player.sx = baseMap[player.color][0];
         player.sy = baseMap[player.color][1];
@@ -173,7 +178,8 @@ global.savePlayerData = function (player) {
         lives: player.lives,
         guild: player.guild,
         sx: player.sx,
-        sy: player.sy
+        sy: player.sy,
+        isDeveloper: player.isDeveloper || false
     };
     PLAYER_DATABASE.updateOne({ _id: player.name }, { $set: record }, { upsert: true });
 };
