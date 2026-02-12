@@ -45,8 +45,8 @@ class Player {
         this.docked = false;
 
         // Developer Mode
-        this.isDeveloper = false;
-        this.godMode = false;
+        this.isDeveloper = true;
+        this.godMode = true;
 
         // misc timers
         this.noDrift = 50; // A timer used for decelerating angular momentum
