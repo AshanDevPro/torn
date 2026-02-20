@@ -82,6 +82,16 @@ class LoginOverlay extends React.Component<{ display: boolean }, { user: string,
         socket?.emit(`lore`, { team: `green` });
     };
 
+    registerY = () => {
+        socket.open();
+        socket?.emit(`lore`, { team: `yellow` });
+    };
+
+    registerPu = () => {
+        socket.open();
+        socket?.emit(`lore`, { team: `purple` });
+    };
+
     login = async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -113,29 +123,17 @@ class LoginOverlay extends React.Component<{ display: boolean }, { user: string,
     };
 
     render = () => {
-        const buttonOrder = (this.state.seed < 0.66)
-            ? ((this.state.seed < 0.33)
-                ? (
-                    <div className="text-center">
-                        <button id="registerR" onClick={this.registerR}>Join Alien Team!</button>
-                        <button id="registerB" onClick={this.registerB}>Join Human Team!</button>
-                        <button id="registerG" onClick={this.registerG}>Join Cyborg Team!</button>
-                    </div>
-                )
-                : (
-                    <div className="text-center">
-                        <button id="registerG" onClick={this.registerG}>Join Cyborg Team!</button>
-                        <button id="registerR" onClick={this.registerR}>Join Alien Team!</button>
-                        <button id="registerB" onClick={this.registerB}>Join Human Team!</button>
-                    </div>
-                ))
-            : (
-                <div className="text-center">
-                    <button id="registerB" onClick={this.registerB}>Join Human Team!</button>
-                    <button id="registerG" onClick={this.registerG}>Join Cyborg Team!</button>
-                    <button id="registerR" onClick={this.registerR}>Join Alien Team!</button>
-                </div>
-            );
+        // Build all 5 team buttons in a seeded-random order
+        const allTeams = [
+            <button key="r" id="registerR" onClick={this.registerR} style={{ borderColor: `#ff4444` }}>Join Alien Team (Red)!</button>,
+            <button key="b" id="registerB" onClick={this.registerB} style={{ borderColor: `#4444ff` }}>Join Human Team (Blue)!</button>,
+            <button key="g" id="registerG" onClick={this.registerG} style={{ borderColor: `#44bb44` }}>Join Cyborg Team (Green)!</button>,
+            <button key="y" id="registerY" onClick={this.registerY} style={{ borderColor: `gold`, color: `gold` }}>Join Solar Sovereignty (Yellow)!</button>,
+            <button key="p" id="registerPu" onClick={this.registerPu} style={{ borderColor: `violet`, color: `violet` }}>Join Phantom Accord (Purple)!</button>
+        ];
+        // Seed a simple shuffle using the stored random seed
+        const shuffled = [...allTeams].sort((a, b) => (Math.sin(this.state.seed * (allTeams.indexOf(a) + 1) * 7) - Math.sin(this.state.seed * (allTeams.indexOf(b) + 1) * 7)));
+        const buttonOrder = <div className="text-center">{shuffled}</div>;
 
         return !this.props.display
             ? null
@@ -149,7 +147,7 @@ class LoginOverlay extends React.Component<{ display: boolean }, { user: string,
                             </div>
                             <div className="video">
                                 <div className="text-center">
-                                    <img src="img/harrlogo.png" alt="Logo" width="340"/>
+                                    <img src="img/harrlogo.png" alt="Logo" width="340" />
                                 </div>
                             </div>
                             <div className="login">

@@ -62,7 +62,7 @@ class Base {
     }
 
     tick () {
-    // spawn a bot if we need more bots
+        // spawn a bot if we need more bots
         if (this.baseType !== SENTRY) {
             const botSpawn = Math.random();
             const healthPercent = Math.max(this.health / this.maxHealth, 0.1);
@@ -303,7 +303,11 @@ class Base {
     }
 
     getSectorName () {
-        return `${String.fromCharCode(97 + this.sx).toUpperCase()}${this.sy + 1}`;
+        // Handle extended sector naming for 31x31 map (A-Z for 0-25, AA-AE for 26-30)
+        const col = this.sx < 26
+            ? String.fromCharCode(65 + this.sx)
+            : `A${String.fromCharCode(65 + (this.sx - 26))}`;
+        return `${col}${this.sy + 1}`;
     }
 
     EMP (t) {

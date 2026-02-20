@@ -429,7 +429,8 @@ global.updateBooms = function () {
 global.rLore = function () {
     ctx.fillStyle = brighten(pc);
     ctx.font = `22px ShareTech`;
-    wrapText(ctx, jsn.lore[colorSelect(pc, 0, 1, 2)], 48, h / 2 - 22 * 5 - 10000 / (loreTimer + 1), w - 96, 40);
+    const loreIndex = { red: 0, blue: 1, green: 2, yellow: 3, purple: 4 }[pc] || 0;
+    wrapText(ctx, jsn.lore[loreIndex], 48, h / 2 - 22 * 5 - 10000 / (loreTimer + 1), w - 96, 40);
     ctx.textAlign = `center`;
     ctx.fillStyle = `yellow`;
     const t = (new Date()).getTime() / 6000;

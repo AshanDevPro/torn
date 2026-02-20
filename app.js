@@ -239,7 +239,9 @@ function updateQuests () {
             if (teamQuests[teamColor][i] !== 0) continue;
             const r = Math.random();
             const r2 = Math.random();
-            const whatTeam = (Math.random() < 0.5) ? colorSelect(teamColor, `blue`, `green`, `red`) : colorSelect(teamColor, `green`, `red`, `blue`);
+            // Pick a random enemy team (any team other than the current one)
+            const allTeams = Object.keys(baseMap).filter(t => t !== teamColor);
+            const whatTeam = allTeams[Math.floor(Math.random() * allTeams.length)];
             const metals = [`copper`, `silver`, `platinum`, `iron`];
             let nm = 0;
             if (i < 4) {
@@ -341,7 +343,9 @@ function init () { // start the server!
     for (let s = 0; s < mapSz * mapSz; s++) {
         const x = s % mapSz;
         const y = Math.floor(s / mapSz);
-        createPlanet(planetNames[s], x, y);
+        // Cycle through planetNames if we have more sectors than names (31x31=961 sectors, may exceed JSON list)
+        const pName = planetNames[s % planetNames.length] + (s >= planetNames.length ? `-${Math.floor(s / planetNames.length) + 1}` : ``);
+        createPlanet(pName, x, y);
     }
 
     // wormhole

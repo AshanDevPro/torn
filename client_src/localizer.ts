@@ -16,7 +16,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import mEng from '../client/translations/translate.json';
-import jsn from '../client/weapons.json';
+import _jsn from '../client/weapons.json';
+const jsn: any = _jsn;
 
 declare const global: any;
 declare const loadLang: any;

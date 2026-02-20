@@ -16,7 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 class Command {
-    constructor(usage, permissions, invoke, visible = true) {
+    constructor (usage, permissions, invoke, visible = true) {
         this.usage = usage;
         this.permissions = permissions;
         this.invoke = invoke;
@@ -107,7 +107,7 @@ cmds.changeteam = new Command(`/changeteam`, REGISTERED, (commandExecuter, msg) 
             commandExecuter.socket.emit(`chat`, { msg: `You don't have enough experience!` });
             return;
         }
-        if (split[1] !== `green` && split[1] !== `blue` && split[1] !== `red`) {
+        if (split[1] !== `green` && split[1] !== `blue` && split[1] !== `red` && split[1] !== `yellow` && split[1] !== `purple`) {
             commandExecuter.socket.emit(`chat`, { msg: `Invalid team to switch to!` });
             return;
         }
@@ -115,7 +115,7 @@ cmds.changeteam = new Command(`/changeteam`, REGISTERED, (commandExecuter, msg) 
             commandExecuter.socket.emit(`chat`, { msg: `That's your current team!` });
             return;
         }
-        teamDict = { red: 0, blue: 1, green: 2 };
+        teamDict = { red: 0, blue: 1, green: 2, yellow: 3, purple: 4 };
         const oldColor = commandExecuter.color;
         commandExecuter.color = split[1];
         const lossConstant = commandExecuter.tag === `B` ? 0.95 : 0.9; // MVPs lose less when switching teams
@@ -537,7 +537,8 @@ cmds.devmode = new Command(`/devmode \u003cplayer\u003e - Toggle developer mode 
 • God mode (invincibility)
 • All weapon slots unlocked
 Use /godmode to toggle invincibility
-Use /unlockall to unlock all weapons` });
+Use /unlockall to unlock all weapons`
+        });
         chatAll(`${chatColor(`violet`)}${recipient.nameWithColor()} ${chatColor(`lime`)}is now in DEVELOPER MODE!`);
     } else {
         recipient.godMode = false;
@@ -546,12 +547,12 @@ Use /unlockall to unlock all weapons` });
     }
 
     recipient.save();
-    commandExecuter.socket.emit(`chat`, { msg: `${chatColor(`violet`)}Developer mode ${recipient.isDeveloper ? 'ENABLED' : 'DISABLED'} for ${recipient.nameWithColor()}` });
+    commandExecuter.socket.emit(`chat`, { msg: `${chatColor(`violet`)}Developer mode ${recipient.isDeveloper ? `ENABLED` : `DISABLED`} for ${recipient.nameWithColor()}` });
 });
 
 cmds.godmode = new Command(`/godmode - Toggle invincibility (god mode)`, ADMINPLUS, (commandExecuter, msg) => {
     commandExecuter.godMode = !commandExecuter.godMode;
-    commandExecuter.socket.emit(`chat`, { msg: `${chatColor(commandExecuter.godMode ? `lime` : `red`)}God Mode: ${commandExecuter.godMode ? 'ON' : 'OFF'}` });
+    commandExecuter.socket.emit(`chat`, { msg: `${chatColor(commandExecuter.godMode ? `lime` : `red`)}God Mode: ${commandExecuter.godMode ? `ON` : `OFF`}` });
     if (commandExecuter.godMode) {
         commandExecuter.health = commandExecuter.maxHealth;
     }

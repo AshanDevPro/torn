@@ -36,8 +36,8 @@ global.baseKillExp = 5000; // Exp reward for killing a base
 global.baseKillMoney = 250000; // ditto but money
 global.baseRegenSpeed = 3; // How many times faster bases regenerate health than players
 global.baseClaimRange = 1000; // How far you must be from a base (times ten) to get rewards
-global.mapSz = 7; // How many sectors across the server is. If changed, see planetsClaimed
-global.sectorWidth = 14336; // must be divisible by 2048.
+global.mapSz = 31; // How many sectors across the server is. 31x31 grid for 5 teams (red, blue, green, yellow, purple)
+global.sectorWidth = 2048; // must be divisible by 2048. At 2048, corner-to-corner of each sector is ~2896 ticks (~1400 to center).
 global.moneyPerRaidPoint = 300000;
 global.playerLimit = 130; // A soft limit on the max number of players+bots+guests online. When reached, bots do not spawn as much
 global.playerKillMoney = 2500;
@@ -69,7 +69,7 @@ global.playerCount = 0;
 global.botCount = 0;
 global.guestCount = 0; // blue/red players/guests/bots
 global.raidTimer = 50000;
-global.teamQuests = { blue: [], red: [], green: [] };// A list of the 10 available quests for humans and aliens
+global.teamQuests = { blue: [], red: [], green: [], yellow: [], purple: [] };// A list of the 10 available quests for all 5 teams
 
 // Object lists. All of them are in Y-MAJOR ORDER.
 global.guildPlayers = {};
@@ -98,25 +98,51 @@ global.ships = jsn.ships;
 global.planetNames = jsn.planets;
 
 // bases
+// MAP IS 31x31 (sectors 0-30 on both axes)
+// Sector naming: x=column (0-30=A-AE), y=row (0-30=1-31)
+// sectorWidth=2048 ticks per sector, total map = 31*2048 = 63488 ticks across
+// Each sector corner-to-corner diagonal ~2896 ticks, center-to-corner ~1448 ticks
+//
+// BASE POSITIONS - TO BE CONFIGURED BY SERVER ADMIN
+// Format: [x0, y0, x1, y1, x2, y2, x3, y3] (4 bases per team)
+// x = column (0=left, 30=right), y = row (0=top, 30=bottom)
+// Suggested layout for 5 teams on a 31x31 grid:
+//   RED    - top-left corner area
+//   BLUE   - top-right corner area
+//   GREEN  - bottom-left corner area
+//   YELLOW - bottom-right corner area
+//   PURPLE - center area
 global.basesPerTeam = 4;
 global.baseMap = {
-    red: [ // x, y
-        1, 0,
-        3, 0,
+    red: [ // x, y  -- TOP-LEFT corner (placeholder: configure as desired)
         2, 2,
-        5, 1
+        5, 2,
+        2, 5,
+        4, 4
     ],
-    blue: [
-        4, 2,
-        6, 2,
-        5, 4,
-        4, 6
+    blue: [ // x, y  -- TOP-RIGHT corner (placeholder: configure as desired)
+        25, 2,
+        28, 2,
+        26, 5,
+        28, 4
     ],
-    green: [
-        1, 3,
-        0, 5,
-        2, 6,
-        3, 4
+    green: [ // x, y  -- BOTTOM-LEFT corner (placeholder: configure as desired)
+        2, 25,
+        5, 28,
+        2, 28,
+        4, 26
+    ],
+    yellow: [ // x, y  -- BOTTOM-RIGHT corner (placeholder: configure as desired)
+        25, 25,
+        28, 25,
+        26, 28,
+        28, 28
+    ],
+    purple: [ // x, y  -- CENTER (placeholder: configure as desired)
+        13, 13,
+        17, 13,
+        13, 17,
+        17, 17
     ]
 };
 

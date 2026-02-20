@@ -19,6 +19,7 @@ import { translate } from '../localizer';
 
 declare const sectorWidth: number;
 declare const expToRank: number[];
+declare const tick: number;
 
 declare const bigNotes: any[];
 declare const wepns: any;
@@ -46,7 +47,16 @@ for (let i = 0; i < 1571; i++) sins[i] = Math.sin(i / 1e3);
  * @param y The sector's column.
  * @returns A string representation of the sector name.
  */
-const getSectorName = (x: number, y: number) => `${String.fromCharCode(97 + x).toUpperCase()}${y + 1}`;
+const getSectorName = (x: number, y: number) => {
+    // Handle extended sector naming for 31x31 map (A-Z for 0-25, AA-AE for 26-30)
+    let col: string;
+    if (x < 26) {
+        col = String.fromCharCode(65 + x);
+    } else {
+        col = `A${String.fromCharCode(65 + (x - 26))}`;
+    }
+    return `${col}${y + 1}`;
+};
 
 /**
  * Get the description of a quest.
@@ -270,6 +280,8 @@ const brighten = (x: string) => {
     if (x === `red`) return `pink`;
     else if (x === `green`) return `lime`;
     else if (x === `blue`) return `cyan`;
+    else if (x === `yellow`) return `gold`;
+    else if (x === `purple`) return `violet`;
     else return x;
 };
 

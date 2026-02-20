@@ -79,8 +79,8 @@ global.ctx = canvas.getContext(`2d`, { alpha: false });
 global.expToRank = [0];
 global.guiColor = `#333333`;
 global.guiOpacity = 0.5;
-global.teamColors = [`red`, `blue`, `green`];
-global.sectorWidth = 14336;
+global.teamColors = [`red`, `blue`, `green`, `yellow`, `purple`];
+global.sectorWidth = 2048; // default; overridden by server via baseMap packet
 global.mx = 0; global.my = 0; global.mb = 0;
 global.tick = 0;
 global.scrx = 0; global.scry = 0;
@@ -143,17 +143,17 @@ global.w = window.innerWidth;
 global.h = window.innerHeight; // Canvas width and height
 
 global.basesInfo = undefined;
-global.playersInfo = { };
-global.minesInfo = { };
-global.orbsInfo = { };
-global.missilesInfo = { };
-global.vortsInfo = { };
-global.beamsInfo = { };
-global.blastsInfo = { };
-global.astsInfo = { };
-global.packsInfo = { };
+global.playersInfo = {};
+global.minesInfo = {};
+global.orbsInfo = {};
+global.missilesInfo = {};
+global.vortsInfo = {};
+global.beamsInfo = {};
+global.blastsInfo = {};
+global.astsInfo = {};
+global.packsInfo = {};
 
-global.clientmutes = { };
+global.clientmutes = {};
 // for initial loading screen
 global.EVERYTHING_LOADED = false;
 
@@ -289,7 +289,7 @@ const loop = () => {
         // desmos this stuff or you wont have a clue whats going on vvv
         const softsign = Math.exp(homepageTimer / 15);
         let scale = 1.885 * (softsign / (1 + softsign) - 0.47);
-        if (homepageTimer > 100)scale = 1;
+        if (homepageTimer > 100) scale = 1;
 
         ctx.translate(w / 2, h / 2);
         ctx.scale(scale, scale);

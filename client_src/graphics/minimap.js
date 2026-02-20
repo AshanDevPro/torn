@@ -299,8 +299,18 @@ global.r3DMap = function () {
             // else minictx.stroke(); <-- Renders borders around the sectors
 
             if (baseMap2D[i][j] !== 0) {
-                const img = colorSelect(baseMap2D[i][j], Img.mrss, Img.mbss, Img.mgss);
-                minictx.drawImage(img, 104 + cx - 7, 104 + cy - 7, 15, 15);
+                const col = baseMap2D[i][j];
+                if (col === `yellow` || col === `purple`) {
+                    // New teams: draw a colored circle marker
+                    minictx.fillStyle = col === `yellow` ? `gold` : `violet`;
+                    minictx.beginPath();
+                    minictx.arc(104 + cx, 104 + cy, 7, 0, Math.PI * 2);
+                    minictx.fill();
+                    minictx.closePath();
+                } else {
+                    const img = colorSelect(col, Img.mrss, Img.mbss, Img.mgss);
+                    minictx.drawImage(img, 104 + cx - 7, 104 + cy - 7, 15, 15);
+                }
             }
 
             if (planetMap2D[i][j] !== 0) {

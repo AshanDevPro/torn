@@ -86,7 +86,7 @@ module.exports = initNetcode = () => {
         : protocol.createServer();
 
     if (Config.getValue(`want-unix-sockets`, false)) {
-    // Open a unix socket on current dir
+        // Open a unix socket on current dir
         server.listen(`torn.socket`);
     } else {
         console.log(`=== STARTING SERVER ON PORT ${port} ===`);
@@ -155,7 +155,7 @@ module.exports = initNetcode = () => {
 
         socket.on(`lore`, (data) => { // player is requesting lore screen.
             if (typeof data === `undefined` || typeof data.team !== `string`) return;
-            if (data.team !== `red` && data.team !== `blue` && data.team !== `green`) return;
+            if (data.team !== `red` && data.team !== `blue` && data.team !== `green` && data.team !== `yellow` && data.team !== `purple`) return;
             socket_color = data.team;
             socket.emit(`lored`, { pc: socket_color });
         });
