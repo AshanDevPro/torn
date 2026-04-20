@@ -147,6 +147,14 @@ pm2 startup
 
 ## 🚑 PART 3: Troubleshooting
 
+### **Error: `Your local changes to the following files would be overwritten by merge`**
+*   **Cause:** You have conflicting local changes on the VPS (often caused by the build process or accidental edits on the server).
+*   **Fix:** Force the server to exactly match GitHub by throwing away local changes:
+    ```bash
+    git reset --hard HEAD
+    git pull origin main
+    ```
+
 ### **Error: `fatal: not a git repository`**
 *   **Cause:** You are in the wrong folder.
 *   **Fix:**
