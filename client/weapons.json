@@ -968,6 +968,39 @@
       "price": 12000000,
       "weapons": 10,
       "capacity": 5000
+    },
+    {
+      "thrust": 0.85,
+      "health": 90,
+      "agility": 2.0,
+      "width": 64,
+      "price": 0,
+      "weapons": 3,
+      "capacity": 3000,
+      "designTag": "r1",
+      "designNote": "Human Character Design r1 - Nimble Scout Test Variant"
+    },
+    {
+      "thrust": 0.65,
+      "health": 130,
+      "agility": 1.4,
+      "width": 80,
+      "price": 0,
+      "weapons": 5,
+      "capacity": 5000,
+      "designTag": "r2",
+      "designNote": "Human Character Design r2 - Balanced Fighter Test Variant"
+    },
+    {
+      "thrust": 0.45,
+      "health": 200,
+      "agility": 0.9,
+      "width": 100,
+      "price": 0,
+      "weapons": 7,
+      "capacity": 8000,
+      "designTag": "r3",
+      "designNote": "Human Character Design r3 - Heavy Assault Test Variant"
     }
   ],
   "techs": {

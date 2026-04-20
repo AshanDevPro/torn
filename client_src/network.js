@@ -435,6 +435,10 @@ socket.on(`you`, (data) => {
         // prevents undefined on base
         points = data.points;
     }
+    if (typeof data.timePlayed !== `undefined`) timePlayed = data.timePlayed;
+    if (typeof data.driftTimer !== `undefined`) driftTimer = data.driftTimer;
+    if (typeof data.playerKills !== `undefined`) playerKills = data.playerKills;
+    if (typeof data.botKills !== `undefined`) botKills = data.botKills;
 });
 socket.on(`weapons`, (data) => {
     let diff = false;

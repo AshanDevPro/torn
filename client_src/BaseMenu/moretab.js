@@ -50,7 +50,7 @@ global.moreOnHover = function () {
 
 global.moreOnClick = function (buttonID) {
     // more page
-    const linkArr = [`https://tornspace.wikia.com/wiki/Torn.space_Wiki`, `/store`, `/leaderboard`, `https://github.com/TornDotSpace/Torn`, `https://discord.gg/tGrYXwP`, `/credits`];
+    const linkArr = [`/wiki`, `/store`, `/leaderboard`, `https://github.com/TornDotSpace/Torn`, `https://discord.gg/tGrYXwP`, `/credits`];
     for (let i = 0; i < 6; i++) {
         if (buttonID == 500 + i) window.open(linkArr[i], `_blank`);
     }

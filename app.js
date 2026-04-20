@@ -123,7 +123,7 @@ function onCrash (err) {
 
     saveTurrets();
 
-    const crashReport = `==== TORN.SPACE CRASH REPORT ====\nCrash Time: ${new Date()}\nPlayers Online: ${plyrs}\nStack Trace: ${err.stack}`;
+    const crashReport = `==== SERVER CRASH REPORT ====\nCrash Time: ${new Date()}\nPlayers Online: ${plyrs}\nStack Trace: ${err.stack}`;
     if (Config.getValue(`debug`, true)) {
         console.error(crashReport);
     } else {
@@ -488,7 +488,7 @@ function update () {
                 // Check for creation
                 if (pack === undefined) {
                     // Store pack for joining clients & delta calculation
-                    pack = playerPack[y][x][i] = { disguise: player.disguise, trail: player.trail, shield: player.shield, empTimer: player.empTimer, hasPackage: player.hasPackage, id: player.id, ship: player.ship, speed: player.speed, maxHealth: player.maxHealth, color: player.color, x: player.x, y: player.y, name: player.name, health: player.health, angle: player.angle, driftAngle: player.driftAngle };
+                    pack = playerPack[y][x][i] = { isBot: player.isBot, disguise: player.disguise, trail: player.trail, shield: player.shield, empTimer: player.empTimer, hasPackage: player.hasPackage, id: player.id, ship: player.ship, speed: player.speed, maxHealth: player.maxHealth, color: player.color, x: player.x, y: player.y, name: player.name, health: player.health, angle: player.angle, driftAngle: player.driftAngle };
                     // Send create
                     sendAllSector(`player_create`, pack, x, y);
 

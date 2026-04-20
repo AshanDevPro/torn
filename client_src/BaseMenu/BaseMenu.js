@@ -25,13 +25,14 @@ global.baseMenuCanvas = document.createElement(`canvas`);
 baseMenuCanvas.width = 768;
 baseMenuCanvas.height = 512;
 global.baseMenuCtx = baseMenuCanvas.getContext(`2d`, { alpha: true });
-const tabCount = 4;
+const tabCount = 5;
 const tabWidth = baseMenuCanvas.width / tabCount;
 
 require(`./shoptab.js`);
 require(`./moretab.js`);
 require(`./queststab.js`);
 require(`./achievementstab.js`);
+require(`./statstab.js`);
 
 global.baseMenuX = w / 2 - 128 * 3; global.baseMenuY = h / 4 - 128; // Where do we render the base menu subcanvas?
 
@@ -43,7 +44,7 @@ global.rBaseGui = function () {
     baseMenuCtx.font = `14px ShareTech`;
     baseMenuCtx.lineWidth = 2;
 
-    const tabs = [`Shop`, `Quests`, `Achievements`, `More`];
+    const tabs = [`Shop`, `Quests`, `Achievements`, `More`, `Stats`];
 
     baseMenuCtx.globalAlpha = guiOpacity;
     baseMenuCtx.fillStyle = guiColor;
@@ -104,6 +105,9 @@ global.rInBase = function () {
         case 3:
             renderMore();
             break;
+        case 4:
+            renderStats();
+            break;
         case 7:
             renderWeaponStore();
             break;
@@ -132,6 +136,7 @@ global.baseMenuOnClick = function (buttonID) {
     else if (tab === 1) questsOnClick(buttonID);
     else if (tab === 2) achievementsOnClick(buttonID);
     else if (tab === 3) moreOnClick(buttonID);
+    else if (tab === 4) statsOnClick(buttonID);
 
     const x = mx - baseMenuX;
     const y = my - baseMenuY; // mouse coordinates

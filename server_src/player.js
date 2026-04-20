@@ -79,6 +79,8 @@ class Player {
 
         this.money = 8000;
         this.kills = 0;
+        this.botKills = 0;    // kills against AI/bot players
+        this.playerKills = 0; // kills against human players
         this.killStreakTimer = -1;
         this.killStreak = 0;
         this.baseKills = 0;
@@ -146,6 +148,7 @@ class Player {
         this.cornersTouched = 0; // bitmask
         this.oresMined = 0; // bitmask
         this.questsDone = 0; // bitmask
+        this.timePlayed = 0; // total ticks this player has been active (not docked/dead)
         this.planetsClaimed = `0000000` + `0000000` + `0000000` + `0000000` + `0000000` + `0000000` + `0000000`;
         this.points = 0;
 
@@ -460,6 +463,7 @@ class Player {
     }
 
     move() {
+        this.timePlayed++; // count active gameplay ticks
         if (this.hyperdriveTimer > 0 && this.empTimer <= 0) {
             this.hyperdriveTimer--;
             this.speed = (wepns[22].speed - square(100 - this.hyperdriveTimer)) / (this.ship == 16 ? 7 : 10);
@@ -1081,6 +1085,8 @@ class Player {
         }
 
         this.kills++;
+        if (p.isBot) this.botKills++;
+        else this.playerKills++;
     }
 
     // Player_MP stubs

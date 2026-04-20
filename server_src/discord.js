@@ -28,7 +28,7 @@ myPlayerCount = 0; // cache the number to not excessively do discord calls
 
 global.setDiscordActivity = function () {
     if (myPlayerCount === playerCount) return;
-    client.user.setActivity(`torn.space with ${playerCount} players`);
+    client.user.setActivity(`Torn with ${playerCount} players`);
     myPlayerCount = playerCount;
 };
 

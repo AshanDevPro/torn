@@ -136,8 +136,15 @@ const loadAllImages = () => {
     loadImage(`whiteArrow`, `/img/arrows/whiteArrow.png`);
     loadImage(`blackArrow`, `/img/arrows/blackArrow.png`);
 
-    // Ships.
+    // Ships (0-25 original designs).
     for (let i = 0; i < 26; i++) {
+        loadShipImage(`blue`, i);
+        loadShipImage(`red`, i);
+        loadShipImage(`green`, i);
+    }
+
+    // Human character design test variants r1 (26), r2 (27), r3 (28).
+    for (let i = 26; i <= 28; i++) {
         loadShipImage(`blue`, i);
         loadShipImage(`red`, i);
         loadShipImage(`green`, i);

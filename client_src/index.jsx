@@ -57,7 +57,6 @@ const printStartup = () => {
     console.error(`***********************************************************************`);
     console.error(`WARNING: PASTING CODE INTO HERE CAN ALLOW FOR YOUR ACCOUNT TO BE STOLEN`);
     console.error(`ALWAYS AUDIT CODE YOU ARE INJECTING INTO THE DEVELOPER CONSOLE`);
-    console.error(`ADDITIONALLY, PLEASE RESPECT OUR TOS https://torn.space/legal/tos.pdf AND NOTE OUR PRIVACY POLICY https://torn.space/legal/privacy_policy.pdf`);
     console.error(`***********************************************************************`);
 };
 
@@ -68,7 +67,7 @@ ReactDOM.render(<ReactRoot />, document.querySelector(`#root`));
 
 global.loginInProgress = false;
 
-window.document.title = `torn.space`;
+window.document.title = `Torn`;
 
 global.canvas = document.querySelector(`#ctx`);
 
@@ -80,7 +79,7 @@ global.expToRank = [0];
 global.guiColor = `#333333`;
 global.guiOpacity = 0.5;
 global.teamColors = [`red`, `blue`, `green`, `yellow`, `purple`];
-global.sectorWidth = 2048; // default; overridden by server via baseMap packet
+global.sectorWidth = 1768; // default; overridden by server via baseMap packet
 global.mx = 0; global.my = 0; global.mb = 0;
 global.tick = 0;
 global.scrx = 0; global.scry = 0;
@@ -97,6 +96,11 @@ global.pscx = 0; global.pscy = 0; global.psga = 0;
 global.bxo = 0; global.byo = 0; global.bx = 0; global.by = 0;
 global.iron = 0; global.silver = 0; global.platinum = 0; global.copper = 0;
 global.kills = 0; global.baseKills = 0; global.money = 0; global.experience = 0; global.rank = 0;
+global.timePlayed = 0; // cumulative gameplay ticks (excludes docked/dead time)
+global.driftTimer = 0; // cumulative drift ticks
+global.playerKills = 0; // kills against human players
+global.botKills = 0; // kills against bots/AI
+global.statsFilter = `all`; // `all` | `players` | `bots` — for the statistics page
 global.sx = 0; global.sy = 0;
 global.docked = false; global.actuallyBuying = true;
 global.tab = 0; global.confirmer = -1; global.shipView = 0; global.volTransparency = 0; global.gVol = 0.5;
