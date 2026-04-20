@@ -2,8 +2,8 @@
 
 This guide covers everything from the very first setup to updating your game with new features (like Developer Mode).
 
-**VPS IP:** `76.13.108.157`  
-**Domain:** `http://76.13.108.157`  
+**VPS IP:** `72.61.9.168`  
+**Domain:** `http://72.61.9.168`  
 **Project Path on VPS:** `/var/www/torn-space`
 
 ---
@@ -31,7 +31,8 @@ git push origin main
 
 ```bash
 # 1. Connect (if not already connected)
-ssh root@76.13.108.157
+ssh root@72.61.9.168
+#ssh root@72.61.9.168
 
 # 2. Go to the project folder (CRITICAL STEP)
 cd /var/www/torn-space
@@ -106,7 +107,7 @@ chmod -R 755 /var/www/torn-space
 ```nginx
 server {
     listen 80;
-    server_name 76.13.108.157;
+    server_name 72.61.9.168;
 
     root /var/www/torn-space/client;
     index index.html;
