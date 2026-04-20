@@ -25,7 +25,8 @@ module.exports = {
     entry: [path.resolve(__dirname, `../client_src/index.jsx`)],
     output: {
         path: path.resolve(__dirname, `../client`),
-        filename: `client.min.js`
+        filename: `client.min.js`,
+        globalObject: 'window'
     },
     module: {
         rules: [
