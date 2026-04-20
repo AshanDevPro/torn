@@ -415,6 +415,24 @@
 			"nameH":"Ghost",
 			"nameC":"Eigenvector",
 			"desc":"An extremely experimental ship."
+		},
+		{
+			"nameA":"Nimble Scout",
+			"nameH":"Nimble Scout",
+			"nameC":"Nimble Scout",
+			"desc":"A nimble human scout variant. Fast and agile, built for reconnaissance."
+		},
+		{
+			"nameA":"Balanced Fighter",
+			"nameH":"Balanced Fighter",
+			"nameC":"Balanced Fighter",
+			"desc":"A balanced human fighter variant. Well-rounded for combat and endurance."
+		},
+		{
+			"nameA":"Heavy Assault",
+			"nameH":"Heavy Assault",
+			"nameC":"Heavy Assault",
+			"desc":"A heavy human assault variant. Slow but powerfully armored for frontline combat."
 		}
 	]
 }

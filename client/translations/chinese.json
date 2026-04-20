@@ -478,6 +478,24 @@
 		"nameH":"Ghost",
 		"nameC":"Eigenvector",
 		"desc":"An extremely experimental ship."
+	},
+	{
+		"nameA":"灵敏侦察机",
+		"nameH":"灵敏侦察机",
+		"nameC":"灵敏侦察机",
+		"desc":"一种灵活的人类侦察变体。速度快，机动性强，专为侦察任务而设计。"
+	},
+	{
+		"nameA":"均衡战斗机",
+		"nameH":"均衡战斗机",
+		"nameC":"均衡战斗机",
+		"desc":"一种平衡的人类战斗机变体。全面适用于战斗和耐久任务。"
+	},
+	{
+		"nameA":"重型突击",
+		"nameH":"重型突击",
+		"nameC":"重型突击",
+		"desc":"一种重型人类突击变体。速度慢但装甲厚实，专为前线战斗而生。"
 	}
     ]
 }

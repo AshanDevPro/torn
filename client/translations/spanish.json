@@ -683,6 +683,24 @@
 			"nameH":"Fantasma",
 			"nameC":"Eigenvector",
 			"desc":"Una nave extremadamente experimental."
+		},
+		{
+			"nameA":"Explorador Ágil",
+			"nameH":"Explorador Ágil",
+			"nameC":"Explorador Ágil",
+			"desc":"Una variante de explorador humano ágil. Rápido y maniobrable, diseñado para reconocimiento."
+		},
+		{
+			"nameA":"Luchador Equilibrado",
+			"nameH":"Luchador Equilibrado",
+			"nameC":"Luchador Equilibrado",
+			"desc":"Una variante de luchador humano equilibrado. Versátil para combate y resistencia."
+		},
+		{
+			"nameA":"Asalto Pesado",
+			"nameH":"Asalto Pesado",
+			"nameC":"Asalto Pesado",
+			"desc":"Una variante de asalto humano pesado. Lento pero fuertemente blindado para el combate en primera línea."
 		}
 	]
 }
