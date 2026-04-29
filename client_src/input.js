@@ -194,7 +194,10 @@ document.addEventListener(`mousedown`, (evt) => {
     soundAllowed = true;
     mb = 1;
     if (lore && !login) {
-        socket.emit(`guest`, VERSION);
+        if (!loginInProgress) {
+            loginInProgress = true;
+            socket.emit(`guest`, VERSION);
+        }
         return;
     }
     if (mx > w - 32 - 20 - 224 && mx < w - 32 - 20 - 224 + 128 && my > h - 70) gVol = (mx + 20 + 32 + 224 - w) / 128;

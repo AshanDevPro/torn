@@ -67,30 +67,23 @@ class LoginOverlay extends React.Component<{ display: boolean }, { user: string,
         });
     };
 
-    registerR = () => {
-        socket.open();
-        socket?.emit(`lore`, { team: `red` });
+    // Helper: open socket and wait for connect before emitting 'lore'
+    joinTeam = (team: string) => {
+        if (socket.connected) {
+            socket.emit(`lore`, { team });
+        } else {
+            socket.once(`connect`, () => {
+                socket.emit(`lore`, { team });
+            });
+            socket.open();
+        }
     };
 
-    registerB = () => {
-        socket.open();
-        socket?.emit(`lore`, { team: `blue` });
-    };
-
-    registerG = () => {
-        socket.open();
-        socket?.emit(`lore`, { team: `green` });
-    };
-
-    registerY = () => {
-        socket.open();
-        socket?.emit(`lore`, { team: `yellow` });
-    };
-
-    registerPu = () => {
-        socket.open();
-        socket?.emit(`lore`, { team: `purple` });
-    };
+    registerR = () => { this.joinTeam(`red`); };
+    registerB = () => { this.joinTeam(`blue`); };
+    registerG = () => { this.joinTeam(`green`); };
+    registerY = () => { this.joinTeam(`yellow`); };
+    registerPu = () => { this.joinTeam(`purple`); };
 
     login = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -116,10 +109,19 @@ class LoginOverlay extends React.Component<{ display: boolean }, { user: string,
         }
 
         const playCookieData = await playCookie.text();
-        socket.open();
 
         console.log(`:TornNetRepository: Got PlayCookie: ${playCookieData}`);
-        socket?.emit(`login`, { cookie: playCookieData, version: VERSION });
+
+        const doLogin = () => {
+            socket.emit(`login`, { cookie: playCookieData, version: VERSION });
+        };
+
+        if (socket.connected) {
+            doLogin();
+        } else {
+            socket.once(`connect`, doLogin);
+            socket.open();
+        }
     };
 
     render = () => {

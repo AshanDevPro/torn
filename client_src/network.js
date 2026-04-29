@@ -400,8 +400,10 @@ socket.on(`lored`, (data) => {
 });
 socket.on(`guested`, (data) => {
     credentialState = 0;
+    loginInProgress = false;
     RootState.turnOffDisplay();
     login = true;
+    lore = false;
     guest = true;
     autopilot = false;
     myId = data.id;
