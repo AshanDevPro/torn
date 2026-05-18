@@ -8,6 +8,9 @@
     <img src="https://img.shields.io/github/languages/code-size/TornDotSpace/Torn?style=for-the-badge&color=ff1f44">
 </p>
 
+## Guide
+* **Complete Guide** (VPS hosting, SSL, updates, troubleshooting, dev mode, local setup): `TORN_COMPLETE_GUIDE.md`
+
 ## Prerequisites
 * Node.JS v14+
 * NPM v7
@@ -25,10 +28,18 @@ git clone https://github.com/TornDotSpace/Torn
 ```sh
 npm i -g npm
 ```
-* Run the shell script to start the server!
+* For a full Windows walkthrough, use `LOCAL_SETUP_GUIDE.md`.
+* Quick start:
 ```sh
 ./start_dev_server.sh # UNIX
-./devServer-win.sh # Windows
+.\devServer-win.ps1 # Windows PowerShell
 ```
 * Navigate to `http://localhost:7301` in your browser, and you should be able to play.
+
+## VPS note
+If you are deploying this game to your own server, use `TORN_COMPLETE_GUIDE.md` and build the client with:
+
+```sh
+npm run build:vps
+```
 

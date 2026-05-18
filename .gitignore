@@ -141,5 +141,3 @@ db/
 
 # Discord application token
 config/discordconfig.json
-
-
